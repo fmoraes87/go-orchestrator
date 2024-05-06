@@ -6,7 +6,6 @@ import (
 	"warp-forge/task"
 	"warp-forge/worker"
 
-	"github.com/docker/docker/client"
 	"github.com/golang-collections/collections/queue"
 	"github.com/google/uuid"
 )
@@ -113,7 +112,7 @@ func main() {
 	time.Sleep(time.Second * 5)
 	fmt.Printf("stopping container %s\n", createResult.ContainerId)
 	_ = stopContainer(dockerTask, createResult.ContainerId)
-}*/
+}
 
 func createContainer() (*task.Docker, *task.DockerResult) {
 	c := task.Config{
@@ -153,3 +152,4 @@ func stopContainer(d *task.Docker, id string) *task.DockerResult {
 		"Container %s has been stopped and removed\n", result.ContainerId)
 	return &result
 }
+*/
