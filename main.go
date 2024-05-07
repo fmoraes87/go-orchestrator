@@ -2,6 +2,9 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"os"
+	"strconv"
 	"time"
 	"warp-forge/task"
 	"warp-forge/worker"
@@ -13,6 +16,38 @@ import (
 // previous code not shown
 
 func main() {
+	host := os.Getenv("CUBE_HOST")
+	port, _ := strconv.Atoi(os.Getenv("CUBE_PORT"))
+
+	fmt.Println("Starting Cube worker")
+
+	w := worker.Worker{
+		Queue: *queue.New(),
+		Db:    make(map[uuid.UUID]*task.Task),
+	}
+	api := worker.Api{Address: host, Port: port, Worker: &w}
+
+	go runTasks(&w)
+	api.Start()
+}
+
+func runTasks(w *worker.Worker) {
+	for {
+		if w.Queue.Len() != 0 {
+			result := w.RunTask()
+			if result.Error != nil {
+				log.Printf("Error running task: %v\n", result.Error)
+			}
+		} else {
+			log.Printf("No tasks to process currently.\n")
+		}
+		log.Println("Sleeping for 10 seconds.")
+		time.Sleep(10 * time.Second)
+	}
+
+}
+
+/*func main() {
 	db := make(map[uuid.UUID]*task.Task)
 	w := worker.Worker{
 		Queue: *queue.New(),
@@ -47,6 +82,7 @@ func main() {
 		panic(result.Error)
 	}
 }
+*/
 
 /*func main() {
 	t := task.Task{
