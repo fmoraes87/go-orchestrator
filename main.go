@@ -30,7 +30,7 @@ func main() {
 
 	go runTasks(&w)
 	go w.CollectStats()
-	api.Start()
+	go api.Start()
 
 	workers := []string{fmt.Sprintf("%s:%d", host, port)}
 	m := manager.New(workers)
