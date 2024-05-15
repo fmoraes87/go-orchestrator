@@ -29,6 +29,7 @@ func (w *Worker) InspectTask(t task.Task) task.DockerInspectResponse {
 func (w *Worker) updateTasks() {
 	for id, t := range w.Db {
 		if t.State == task.Running {
+			log.Printf("Calling health check for task %s", t.ID)
 			resp := w.InspectTask(*t)
 			if resp.Error != nil {
 				fmt.Printf("ERROR: %v\n", resp.Error)
